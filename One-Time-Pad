@@ -1,0 +1,75 @@
+
+ import java.util.Scanner;
+ import java.lang.Math;
+ import java.io.*;
+
+public class Main {
+
+
+
+	public static void main(String[] args) throws IOException{
+		Scanner keyboard = new Scanner(System.in);
+		
+		File keyFile = new File("key.txt");
+		
+		System.out.println("Hello! Welcome to the One-Time Pad project.\n"
+				+ "please enter the word/phrase you would like to encrpyt, \nand your decrypt key will be posted in a file.");
+		System.out.println("What would you like to encrypt?");
+		String phrase = keyboard.nextLine();
+		
+		String key = key(phrase);
+		String encryptedPhrase = encryptedPhrase(phrase, key);
+		
+		//System.out.println("Here is your key: " + key);
+		System.out.println("Here is your encrypted Phrase: " + encryptedPhrase + "\nTo decrypt, use the key and subtract the ascii values."
+				+ " The key will be in the file key.txt. If you find that your value is \nless than 32 after wrapping around 127, "
+				+ " subtract 32 from your value to recieve the absolute distance of the character from \n127, rendering your answer in ascii. Enjoy!!");		
+		BufferedWriter output =  new BufferedWriter(new FileWriter(keyFile));
+		output.write(key);
+		output.close();
+		keyboard.close();
+		
+	}
+	
+	public static String key(String phrase) {
+		
+		String key = "";
+		for (int i = 0; i < phrase.length(); i++) {
+			key += (char) ((int) (Math.random() * 95) + 32);
+		}
+		
+		return (key);
+		
+		
+	}
+	
+	public static String encryptedPhrase (String phrase, String key) {
+		String encryptedPhrase = "";
+		System.out.println();
+		
+		int j = 0;
+
+		while (j != key.length()) {
+			int asciiInt =  (((int) phrase.charAt(j)) + ((int) key.charAt(j))) % 127;
+			
+			if (asciiInt < 32) {
+				asciiInt += 32;
+				encryptedPhrase += (char) (asciiInt);
+				j++;
+			}
+			
+			else {
+				encryptedPhrase += (char) (asciiInt);
+				j++;
+
+			}
+				
+			}
+		
+		return encryptedPhrase;
+		
+	}
+	
+	
+
+}
